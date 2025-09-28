@@ -49,7 +49,7 @@
 	  display: flex;
 	  flex-direction: column;
 	  gap: 10px;
-	  max-height: 400px;   /* limit area */
+	  max-height: 300px;   /* limit area */
 	  overflow-y: auto;    /* scroll if too tall */
 	  padding-right: 5px;  /* spacing so scrollbar isn’t over text */
 	}
@@ -297,6 +297,13 @@
     }
 
     updateCard();
+	  
+	document.addEventListener("keydown", function (e) {
+	  if (e.key === "Enter") {
+	    e.preventDefault(); // prevent form submit/reload
+	    addNewCard();
+	  }
+	});
   </script>
 </body>
 </html>
