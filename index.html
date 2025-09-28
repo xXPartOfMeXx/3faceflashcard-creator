@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3-Face Flashcards .csv Creator</title>
   <style>
+	.lol {
+	  font-size: 0.7rem;
+	  color: #94a3b8; 
+	}
 	.tip {
 	  margin-top: 20px;
 	  font-size: 0.9rem;
@@ -139,6 +143,9 @@
   <h1>3-Face Flashcards .csv Creator</h1>
   <h2 class="subtitle1">Create your own .csv 3-face flashcards</h2>
   <h3 class="subtitle2">Made entirely in ChatGPT (super OP) from Panana Astley</h3>
+  <div style="width:100%; text-align:left; margin-left: 90px;">
+	<button id="toggleListBtn">Hide List</button>
+  </div>
   <div class="container">
     <div class="sidebar">
       <input type="file" id="csvFile" accept=".csv"><br><br>
@@ -171,6 +178,19 @@
   </div>
 
   <script>
+	  const toggleBtn = document.getElementById("toggleListBtn");
+	  const cardList = document.getElementById("cardList");
+
+	  toggleBtn.addEventListener("click", () => {
+	  if (cardList.style.display === "none") {
+		cardList.style.display = "flex"; // show it again
+		toggleBtn.textContent = "Hide List";
+	} else {
+		cardList.style.display = "none"; // hide it
+		toggleBtn.textContent = "Show List";
+	  }
+	});
+
 		// Keyboard controls
 	document.addEventListener("keydown", function(e) {
 	  // Ignore if typing in input or textarea
@@ -298,16 +318,19 @@
   flashcards.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "card-item";
-    div.innerHTML = `
-      <div><strong>${c.word}</strong></div>
-      <div>${c.antonym}</div>
-      <div><em>${c.meaning}</em></div>
-    `;
-    div.onclick = () => { currentCard = i; currentFace = 0; updateCard(); };
-    cardListEl.appendChild(div);
-  });
-}
-
+    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
+    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
+    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
+    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
+    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
+    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
+    
+    // ✅ use addEventListener instead of div.onclick
+    div.addEventListener("click", () => {
+      currentCard = i;
+      currentFace = 0;
+      updateCard();
+    });
 
     cardListEl.appendChild(div);
   });
@@ -403,6 +426,9 @@
 	</div>
 	<div class="tipleft">
 	  <strong>Delete: </strong>Delete current card
+	</div>
+	<div class="lol">
+	 I forking love ChatGPT
 	</div>
 </body>
 </html>
