@@ -298,14 +298,16 @@
   flashcards.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "card-item";
-    div.innerHTML = `<strong>${c.word || "[Word]"}</strong> ${c.meaning || "[Meaning]"} — ${c.antonym || "[Antonym]"}`;
-    
-    // ✅ use addEventListener instead of div.onclick
-    div.addEventListener("click", () => {
-      currentCard = i;
-      currentFace = 0;
-      updateCard();
-    });
+    div.innerHTML = `
+      <div><strong>${c.word}</strong></div>
+      <div>${c.antonym}</div>
+      <div><em>${c.meaning}</em></div>
+    `;
+    div.onclick = () => { currentCard = i; currentFace = 0; updateCard(); };
+    cardListEl.appendChild(div);
+  });
+}
+
 
     cardListEl.appendChild(div);
   });
