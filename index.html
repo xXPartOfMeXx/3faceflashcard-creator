@@ -223,16 +223,23 @@
     }
 
     function renderList() {
-      cardListEl.innerHTML = "";
-      flashcards.forEach((c, i) => {
-        const div = document.createElement("div");
-        div.className = "card-item";
-        div.innerHTML = `<strong>${c.word}</strong> ${c.meaning} — ${c.antonym}`;
-        div.onclick = () => { currentCard = i; currentFace = 0; updateCard(); };
-        cardListEl.appendChild(div);
-      });
-    }
+  cardListEl.innerHTML = "";
+  flashcards.forEach((c, i) => {
+    const div = document.createElement("div");
+    div.className = "card-item";
+    div.innerHTML = `<strong>${c.word || "[Word]"}</strong> ${c.meaning || "[Meaning]"} — ${c.antonym || "[Antonym]"}`;
+    
+    // ✅ use addEventListener instead of div.onclick
+    div.addEventListener("click", () => {
+      currentCard = i;
+      currentFace = 0;
+      updateCard();
+    });
 
+    cardListEl.appendChild(div);
+  });
+}
+	  
     function saveFlashcards() {
       localStorage.setItem("flashcards", JSON.stringify(flashcards));
     }
