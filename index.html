@@ -181,7 +181,7 @@
 
 	function prevCard() {
 	  if (flashcards.length === 0) return;
-	  currentCard = (currentCard - 1) % flashcards.length;
+	  currentCard = (currentCard - 1 + flashcards.length) % flashcards.length;
 	  currentFace = 0; // reset to Word when switching cards
 	  updateCard();
 	}
