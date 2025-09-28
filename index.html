@@ -46,10 +46,13 @@
       max-width: 350px;
     }
     .card-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+	  display: flex;
+	  flex-direction: column;
+	  gap: 10px;
+	  max-height: 400px;   /* limit area */
+	  overflow-y: auto;    /* scroll if too tall */
+	  padding-right: 5px;  /* spacing so scrollbar isn’t over text */
+	}
     .card-item {
       padding: 10px;
       background: #334155;
@@ -122,9 +125,9 @@
       </div>
 
       <div class="editor">
-        <input type="text" id="word" placeholder="Word">
-        <input type="text" id="antonym" placeholder="Antonym">
-        <input type="text" id="meaning" placeholder="Meaning">
+        <input type="text" id="word" placeholder="Face 1">
+        <input type="text" id="antonym" placeholder="Face 2">
+        <input type="text" id="meaning" placeholder="Face 3">
       </div>
       <div>
         <button onclick="addNewCard()">Add New Card</button>
