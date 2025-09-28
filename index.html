@@ -146,6 +146,27 @@
   </div>
 
   <script>
+		// Keyboard controls
+	document.addEventListener("keydown", function(e) {
+	  // Ignore if typing in input or textarea
+	  if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") {
+	    return;
+	  }
+	
+	  if (e.code === "ArrowLeft") {
+	    e.preventDefault();
+	    prevCard();   // go to previous card
+	  }
+	  if (e.code === "ArrowRight") {
+	    e.preventDefault();
+	    nextCard();   // go to next card
+	  }
+	  if (e.code === "Space") {
+	    e.preventDefault();
+	    flipCard();   // flip faces
+	  }
+	});
+
     let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
     let currentCard = 0;
     let currentFace = 0;
