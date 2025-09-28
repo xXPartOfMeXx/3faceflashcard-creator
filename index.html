@@ -125,7 +125,7 @@
     <div class="main">
       <div class="flashcard" id="flashcard">No cards yet</div>
       <div>
-        <button onclick="prevFace()">◀ Prev</button>
+        <button onclick="prevCard()">◀ Prev</button>
         <button onclick="flipCard()">Flip</button>
         <button onclick="nextCard()">Next ▶</button>
       </div>
@@ -178,6 +178,14 @@
       currentFace = (currentFace + 2) % 3;
       updateCard();
     }
+
+	function prevCard() {
+	  if (flashcards.length === 0) return;
+	  currentCard = (currentCard - 1) % flashcards.length;
+	  currentFace = 0; // reset to Word when switching cards
+	  updateCard();
+	}
+
 
     function nextCard() {
       if (flashcards.length === 0) return;
