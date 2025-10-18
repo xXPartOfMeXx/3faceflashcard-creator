@@ -199,13 +199,35 @@
       <div>
         <button onclick="addNewCard()">Add New Card</button>
         <button onclick="saveCard()">Save</button>
-        <button onclick="deleteCurrentCard()">Delete</button>
+        <button onclick="deleteCurrentCard()">Delete card</button>
+		<button id="clearFieldsBtn" class="ghost">Clear Fields</button>
       </div>
       <div id="status"></div>
     </div>
   </div>
 
   <script>
+  function clearTypingFields() {
+  const wordInput = document.getElementById("word");
+  const antonymInput = document.getElementById("antonym");
+  const meaningInput = document.getElementById("meaning");
+
+  wordInput.value = "";
+  antonymInput.value = "";
+  meaningInput.value = "";
+
+  wordInput.focus(); // move cursor back to first field
+}
+  document.getElementById("clearFieldsBtn").addEventListener("click", clearTypingFields);
+  document.addEventListener("keydown", (e) => {
+  // Check for Ctrl + Shift + Delete (works even inside inputs)
+  if (e.ctrlKey && e.shiftKey && e.code === "Delete") {
+    e.preventDefault();  // stop browser default behavior
+    clearTypingFields();
+  }
+});
+
+
   document.getElementById("githubBtn").addEventListener("click", () => {
   window.open("https://github.com/xXPartOfMeXx/3faceflashcard-creator", "_blank");
 });
@@ -478,6 +500,9 @@ document.getElementById("quizBtn").addEventListener("click", () => {
 	</div>
 	<div class="tipleft">
 	  <strong>Delete: </strong>Delete current card
+	</div>
+	<div class="tipleft">
+	  <strong>Ctrl + Shift + Delete: </strong>Clear all 3 fields (will not delete the card)
 	</div>
 	<div class="lol">
 	 I forking love ChatGPT
