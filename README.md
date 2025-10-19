@@ -6,6 +6,7 @@ Some notes you need to know before use:
 - **Save Button** is for when you want to save current card. If you want to add cards, use **Add Card Button** instead
 - **NEVER** use **Save** after **Clear Fields** (This makes it replace the current card)
 - Cards in card list is clickable, but it will not change your mouse cursor (i'm lazy to fix this lol)
+- !! **Add New Card** does NOT automatically add a blank card to save. Instead, **Clear Fields** and enter the content, then **Add New Card**
 - Contact me on Facebook: [Panana Astley](https://www.facebook.com/panana.astley)
 
 
