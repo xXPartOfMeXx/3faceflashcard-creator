@@ -9,5 +9,5 @@ Some notes you need to know before use:
 - Contact me on Facebook: [Panana Astley](https://www.facebook.com/panana.astley)
 
 
-Link: [Creator](https://xxpartofmexx.github.io/3faceflashcard-creator/)
+Link: https://xxpartofmexx.github.io/3faceflashcard-creator/
 
