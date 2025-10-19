@@ -6,26 +6,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3-Face Flashcards .csv Creator</title>
   <style>
-  .top-left-links {
-  position: fixed;
-  top: 15px;
-  left: 20px;
-  display: flex;
-  gap: 10px;
-  z-index: 1000;
+  a {
+  color: #38bdf8;         /* light cyan-blue */
+  text-decoration: none;  /* removes underline */
 }
 
-.top-left-links button {
+a:hover {
+  color: #0ea5e9;         /* darker blue when hovered */
+  text-decoration: underline;
+}
+
+  /* popup background */
+.popup-overlay {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+/* popup box */
+.popup-box {
+  background: #1e293b;
+  color: #f8fafc;
+  padding: 20px;
+  border-radius: 10px;
+  width: 900px;
+  max-width: 90%;
+  max-height: 80vh;   /* 👈 limits popup height */
+  overflow-y: auto;   /* 👈 enables vertical scroll */
+  text-align: left;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  font-size: 1.2rem;   /* increase text size */
+  line-height: 1.3;    /* make it more readable */
+}
+
+.popup-box h2 {
+  margin-top: 0;
+}
+
+.popup-box button {
+  margin-top: 10px;
+  background: #0284c7;
+  border: none;
+  color: white;
   padding: 6px 12px;
   border-radius: 6px;
-  border: none;
-  background: #0284c7;
-  color: white;
   cursor: pointer;
-  font-weight: 600;
 }
-
-.top-left-links button:hover {
+.popup-box button:hover {
   background: #0369a1;
 }
 
@@ -34,36 +69,37 @@
 	  color: #94a3b8; 
 	}
 	.tip {
-	  margin-top: 20px;
-	  font-size: 0.9rem;
-	  color: #94a3b8; 
+	  margin-top: -10px;
+	  font-size: 1rem;
+	  color: red; 
 	}
 	.tipleftheading {
-	  margin-top: 20px;
-	  margin-left: 40px;
 	  font-style: italic;
 	  font-size: 1rem;
 	  color: #FEB21A;
 	  text-align: left;
-	  align-self: flex-start;
 	  width: 100%;
 	  max-width: 1200px;
 	  box-sizing: border-box;
-	  padding-left: 20px;
 	}
 		.tipleft {
 	  margin-top: 20px;
-	  margin-left: 40px;
 	  font-size: 1rem;
 	  color: #FEB21A;
 	  text-align: left;
-	  align-self: flex-start;
+	  width: 100%;
+	  max-width: 1200px;
+	  box-sizing: border-box;
+	}
+		.buttonsontheleft {
+	  font-size: 1rem;
+	  text-align: left;
 	  width: 100%;
 	  max-width: 1200px;
 	  box-sizing: border-box;
 	  padding-left: 20px;
 	}
-
+	
 	.subtitle1 {
 	font-size: 1rem;
 	margin-bottom: 15px;
@@ -163,15 +199,16 @@
   </style>
 </head>
 <body>
-<h0 class="top-left-links">
-  <button id="githubBtn">My GitHub (this website)</button> 
+<div  class="buttonsontheleft">
+  <button style = "margin-left: -15px" id="githubBtn">My GitHub (this website)</button> 
   <button id="quizBtn">Quiz using these flashcards</button>
-</h0>
-  <h1><br>3-Face Flashcards .csv Creator</h1>
+  <button id="readmeBtn">README (IMPORTANT❗)</button>
+</div>  
+  <h1>3-Face Flashcards .csv Creator</h1>
   <h2 class="subtitle1">Create your own .csv 3-face flashcards</h2>
   <h3 class="subtitle2">Made entirely in ChatGPT (super OP) from Panana Astley</h3>  
-  <h4 class="tipleft" >💡 Tips are below the page. Scroll down to read</h4>
-  <div style="width:100%; text-align:left; margin-left: 90px;">
+  <h4 class="tip" >❗ Tips and notes are in README (the button above) ❗</h4>
+  <div style = "margin-left: -15px" class="tipleft">
 	<button id="toggleListBtn">Hide List</button>
   </div>
   <div class="container">
@@ -205,8 +242,55 @@
       <div id="status"></div>
     </div>
   </div>
+  <div id="readmePopup" class="popup-overlay">
+  <div class="popup-box">
+    <h2>README</h2>
+    <p id="readmeText">
+Create your 3-face-flashcards in ".csv" file
 
+Some notes you need to know before use: <br><br>
+	- Importing a .csv file will ADD UP to the set card. If you want to import a new set of cards, <strong>Clear all</strong> before importing or it will add up to current set instead<br><br>
+	- Press <strong>F5</strong> after <strong>Clear all</strong> for the list to be completely reset<br><br>
+	- <strong>Save Button</strong> is for when you want to save current card. If you want to add cards, use <strong>Add Card Button</strong> instead<br><br>
+	- <strong>NEVER</strong> use <strong>Save</strong> after <strong>Clear Fields</strong> (This makes it replace the current card)<br><br>
+	- Cards in card list is clickable, but it will not change your mouse cursor (i'm lazy to fix this lol)<br><br>
+	- !! <strong>Add New Card</strong> does NOT automatically add a blank card to save. Instead, <strong>Clear Fields</strong> and enter the content, then <strong>Add New Card</strong><br><br>
+	- Contact me on Facebook: <a href="https://www.facebook.com/panana.astley" target="_blank">Panana Astley</a><br><br>
+	<div class="tipleftheading">
+	  *Key bindings:
+	</div>
+	<div class="tipleft">
+	  <p><strong>◀ Left arrow:</strong> Previous card</p>
+	  <p><strong>▶ Right arrow:</strong> Next card</p>
+	  <p><strong>Space:</strong> Flip</p>
+	  <p><strong>Enter:</strong> Add new card</p>
+	  <p><strong>S:</strong> Shuffle</p>
+	  <p><strong>Delete:</strong> Delete current card</p>
+	  <p><strong>Ctrl + Shift + Delete:</strong> Clear all 3 fields (will not delete the card)</p>
+	</div>
+    </p>
+    <button id="closeReadmeBtn">Close</button>
+  </div>
+</div>
   <script>
+  const readmePopup = document.getElementById("readmePopup");
+const readmeBtn = document.getElementById("readmeBtn");
+const closeReadmeBtn = document.getElementById("closeReadmeBtn");
+
+readmeBtn.addEventListener("click", () => {
+  readmePopup.style.display = "flex";
+});
+
+closeReadmeBtn.addEventListener("click", () => {
+  readmePopup.style.display = "none";
+});
+
+// optional: click outside popup to close
+readmePopup.addEventListener("click", (e) => {
+  if (e.target === readmePopup) readmePopup.style.display = "none";
+});
+
+  
   function clearTypingFields() {
   const wordInput = document.getElementById("word");
   const antonymInput = document.getElementById("antonym");
@@ -472,40 +556,9 @@ document.getElementById("quizBtn").addEventListener("click", () => {
 	  }
 	});
   </script>
-	<div class="tip">
-	  💡 Tip: Check the <strong>key bindings</strong> below.
-	  Also, press <strong>F5</strong> after <strong>"Clear all"</strong> for the list to be completely reset 
-	</div>
-	<div class="tip">
-	  📝Note that if you want to import a new <strong>set</strong> of cards, 
-	  <strong>"Clear all"</strong> before importing or it will add up to current set instead
-	</div>
-	<div class="tipleftheading">
-	  Key bindings:
-	</div>
-	<div class="tipleft">
-	  <strong>Left arrow ◀: </strong>Previous card
-	</div>
-  <div class="tipleft">
-	  <strong>Enter: </strong>Add new card
-	</div>
-	<div class="tipleft">
-	  <strong>Right arrow ▶: </strong>Next card
-	</div>
-	<div class="tipleft">
-	  <strong>Space: </strong>Flip
-	</div>
-	<div class="tipleft">
-	  <strong>S: </strong>Shuffle
-	</div>
-	<div class="tipleft">
-	  <strong>Delete: </strong>Delete current card
-	</div>
-	<div class="tipleft">
-	  <strong>Ctrl + Shift + Delete: </strong>Clear all 3 fields (will not delete the card)
-	</div>
-	<div class="lol">
-	 I forking love ChatGPT
-	</div>
+  <div class="lol">
+	 <br>I forking love ChatGPT
+  </div>
+	
 </body>
 </html>
