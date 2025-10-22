@@ -217,7 +217,8 @@ a:hover {
       <div class="card-list" id="cardList"></div>
       <button onclick="clearAll()">Clear all</button>
       <button onclick="shuffleCards()">Shuffle</button>
-      <button onclick="exportCSV()">Export CSV</button>
+	  <input type="text" id="csvFileName" placeholder="Enter file name..." style="width: 180px; padding: 6px; border-radius: 6px; border: none; background: #334155; color: white;">
+      <button id="exportCsvBtn">Export CSV</button>
     </div>
 
     <div class="main">
@@ -255,6 +256,7 @@ Some notes you need to know before use: <br><br>
 	- <strong>NEVER</strong> use <strong>Save</strong> after <strong>Clear Fields</strong> (This makes it replace the current card)<br><br>
 	- Cards in card list is clickable, but it will not change your mouse cursor (i'm lazy to fix this lol)<br><br>
 	- !! <strong>Add New Card</strong> does NOT automatically add a blank card to save. Instead, <strong>Clear Fields</strong> and enter the content, then <strong>Add New Card</strong><br><br>
+	- <strong>NEVER</strong> use <strong>","</strong> in your flashcards - it will be buggy and I cannot fix that<br><br>
 	- Contact me on Facebook: <a href="https://www.facebook.com/panana.astley" target="_blank">Panana Astley</a><br><br>
 	<div class="tipleftheading">
 	  *Key bindings:
@@ -312,6 +314,7 @@ readmePopup.addEventListener("click", (e) => {
 });
 
 
+	document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
   document.getElementById("githubBtn").addEventListener("click", () => {
   window.open("https://github.com/xXPartOfMeXx/3faceflashcard-creator", "_blank");
 });
@@ -531,21 +534,32 @@ document.getElementById("quizBtn").addEventListener("click", () => {
     });
 
     // CSV Export
-    function exportCSV() {
-      if (flashcards.length === 0) return;
-      let csvContent = "";
-      flashcards.forEach(card => {
-        csvContent += `${card.word},${card.antonym},${card.meaning}\n`;
-      });
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "flashcards.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+
+    function exportCsv() {
+  if (flashcards.length === 0) {
+    alert("No flashcards to export!");
+    return;
+  }
+
+  // ✅ get the custom file name (or use default)
+  let fileName = document.getElementById("csvFileName").value.trim();
+  if (fileName === "") fileName = "flashcards";
+  if (!fileName.endsWith(".csv")) fileName += ".csv";
+
+  // build CSV content
+  let csv = "Word,Antonym,Meaning\n";
+  flashcards.forEach(c => {
+    csv += `${c.word || ""},${c.antonym || ""},${c.meaning || ""}\n`;
+  });
+
+  // create downloadable link
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+}
+
 
     updateCard();
 	  
