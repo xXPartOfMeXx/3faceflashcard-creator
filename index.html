@@ -218,7 +218,8 @@ a:hover {
       <button onclick="clearAll()">Clear all</button>
       <button onclick="shuffleCards()">Shuffle</button>
 	  <input type="text" id="csvFileName" placeholder="Enter file name..." style="width: 180px; padding: 6px; border-radius: 6px; border: none; background: #334155; color: white;">
-      <button id="exportCsvBtn">Export CSV</button>
+<button id="exportCsvBtn">Export CSV</button>
+<div id="importStatus" style="margin-top: 5px; font-size: 0.9rem; color: #22c55e;"></div>
     </div>
 
     <div class="main">
@@ -245,13 +246,15 @@ a:hover {
   </div>
   <div id="readmePopup" class="popup-overlay">
   <div class="popup-box">
-    <h2>README</h2>
+    <h2>README (please read...)</h2>
+	
     <p id="readmeText">
 Create your 3-face-flashcards in ".csv" file
 
 Some notes you need to know before use: <br><br>
+	- This website only support editing <strong>ONE SET AT A TIME</strong>. So make sure you <strong>Export your csv file</strong> before editing your new set<br>
+	<em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Tip: If you want to have several flashcard sets, export the set and move it to a dedicated folder (Make sure you remember where it is). When you want to edit, just import that set in and you're good to go 👍</em><br><br>
 	- Importing a .csv file will ADD UP to the set card. If you want to import a new set of cards, <strong>Clear all</strong> before importing or it will add up to current set instead<br><br>
-	- Press <strong>F5</strong> after <strong>Clear all</strong> for the list to be completely reset<br><br>
 	- <strong>Save Button</strong> is for when you want to save current card. If you want to add cards, use <strong>Add Card Button</strong> instead<br><br>
 	- <strong>NEVER</strong> use <strong>Save</strong> after <strong>Clear Fields</strong> (This makes it replace the current card)<br><br>
 	- Cards in card list is clickable, but it will not change your mouse cursor (i'm lazy to fix this lol)<br><br>
@@ -267,6 +270,7 @@ Some notes you need to know before use: <br><br>
 	  <p><strong>Space:</strong> Flip</p>
 	  <p><strong>Enter:</strong> Add new card</p>
 	  <p><strong>S:</strong> Shuffle</p>
+	  <p><strong>Ctrl + S:</strong> Save current card</p>
 	  <p><strong>Delete:</strong> Delete current card</p>
 	  <p><strong>Ctrl + Shift + Delete:</strong> Clear all 3 fields (will not delete the card)</p>
 	</div>
@@ -290,6 +294,13 @@ closeReadmeBtn.addEventListener("click", () => {
 // optional: click outside popup to close
 readmePopup.addEventListener("click", (e) => {
   if (e.target === readmePopup) readmePopup.style.display = "none";
+});
+// --- Keyboard shortcut: Ctrl + S to save current card ---
+document.addEventListener("keydown", function(e) {
+  if (e.ctrlKey && e.key.toLowerCase() === "s") {
+    e.preventDefault(); // prevent browser's default save
+    saveCard(); // silently save current card
+  }
 });
 
   
@@ -460,10 +471,14 @@ document.getElementById("quizBtn").addEventListener("click", () => {
     }
 
     function clearAll() {
-      flashcards = [];
-      saveFlashcards();
-      updateCard();
-    }
+	  flashcards = [];
+	  saveFlashcards();
+	  updateCard();
+	  setTimeout(() => {
+		location.reload(); // ✅ reload the page after short delay
+	  }, 300);
+	}
+
 
     function shuffleCards() {
       for (let i = flashcards.length - 1; i > 0; i--) {
@@ -503,35 +518,52 @@ document.getElementById("quizBtn").addEventListener("click", () => {
 
     // CSV Import
     document.getElementById("csvFile").addEventListener("change", function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const text = event.target.result;
-        const lines = text.split(/\r?\n/);
-        let imported = [];
-        for (let i = 0; i < lines.length; i++) {
-          const cols = lines[i].split(",");
-          if (cols.length >= 3) {
-            const w = cols[0].trim();
-            const a = cols[1].trim();
-            const m = cols[2].trim();
-            if (w.toLowerCase() === "word" && a.toLowerCase().includes("antonym") && m.toLowerCase().includes("meaning")) {
-              continue;
-            }
-            imported.push({ word: w, antonym: a, meaning: m });
-          }
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const text = event.target.result;
+    const lines = text.split(/\r?\n/);
+    let imported = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const cols = lines[i].split(",");
+      if (cols.length >= 3) {
+        const w = cols[0].trim();
+        const a = cols[1].trim();
+        const m = cols[2].trim();
+        // Skip header
+        if (w.toLowerCase() === "word" && a.toLowerCase().includes("antonym") && m.toLowerCase().includes("meaning")) {
+          continue;
         }
-        if (imported.length > 0) {
-          flashcards = flashcards.concat(imported);
-          saveFlashcards();
-          currentCard = 0;
-          currentFace = 0;
-          updateCard();
-        }
-      };
-      reader.readAsText(file);
-    });
+        imported.push({ word: w, antonym: a, meaning: m });
+      }
+    }
+
+    if (imported.length > 0) {
+      flashcards = flashcards.concat(imported);
+      saveFlashcards();
+      currentCard = 0;
+      currentFace = 0;
+      updateCard();
+
+      // Autofill filename
+      const nameWithoutExt = file.name.replace(/\.csv$/i, "");
+      document.getElementById("csvFileName").value = nameWithoutExt;
+
+      // Show import status
+      const statusEl = document.getElementById("importStatus");
+      statusEl.textContent = `Imported: ${file.name} ✅`;
+      statusEl.style.color = "#22c55e";
+
+      // Auto fade after few seconds
+      setTimeout(() => { statusEl.textContent = ""; }, 4000);
+    }
+  };
+
+  reader.readAsText(file);
+});
 
     // CSV Export
 
