@@ -259,7 +259,7 @@ Some notes you need to know before use: <br><br>
 	- <strong>NEVER</strong> use <strong>Save</strong> after <strong>Clear Fields</strong> (This makes it replace the current card)<br><br>
 	- Cards in card list is clickable, but it will not change your mouse cursor (i'm lazy to fix this lol)<br><br>
 	- !! <strong>Add New Card</strong> does NOT automatically add a blank card to save. Instead, <strong>Clear Fields</strong> and enter the content, then <strong>Add New Card</strong><br><br>
-	- <strong>NEVER</strong> use <strong>","</strong> in your flashcards - it will be buggy and I cannot fix that<br><br>
+	- <strong>NOW YOU CAN</strong> use <strong>","</strong> in your flashcards - it will <em>NOT</em> be buggy and I <strong>FIXED THAT!!!</strong><br><br>
 	- Contact me on Facebook: <a href="https://www.facebook.com/panana.astley" target="_blank">Panana Astley</a><br><br>
 	<div class="tipleftheading">
 	  *Key bindings:
@@ -599,10 +599,25 @@ if (cols.length >= 3) {
   if (!fileName.endsWith(".csv")) fileName += ".csv";
 
   // build CSV content
-  let csv = "Word,Antonym,Meaning\n";
-  flashcards.forEach(c => {
-    csv += `${c.word || ""},${c.antonym || ""},${c.meaning || ""}\n`;
-  });
+  // ✅ Proper CSV stringifier (handles commas and quotes)
+function csvEscape(value) {
+  if (value == null) return "";
+  const str = String(value);
+  // If contains a comma or quote, wrap in quotes and escape existing quotes
+  if (str.includes(",") || str.includes('"')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+let csv = "Word,Antonym,Meaning\n";
+flashcards.forEach(c => {
+  const w = csvEscape(c.word);
+  const a = csvEscape(c.antonym);
+  const m = csvEscape(c.meaning);
+  csv += `${w},${a},${m}\n`;
+});
+
 
   // create downloadable link
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
