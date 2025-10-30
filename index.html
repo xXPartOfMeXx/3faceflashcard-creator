@@ -528,11 +528,39 @@ document.getElementById("quizBtn").addEventListener("click", () => {
     let imported = [];
 
     for (let i = 0; i < lines.length; i++) {
-      const cols = lines[i].split(",");
-      if (cols.length >= 3) {
-        const w = cols[0].trim();
-        const a = cols[1].trim();
-        const m = cols[2].trim();
+      // ✅ Proper CSV parser that respects quotes
+function parseCSVLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      // handle escaped quotes ("")
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === "," && !inQuotes) {
+      result.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
+const cols = parseCSVLine(lines[i]);
+if (cols.length >= 3) {
+  const w = cols[0];
+  const a = cols[1];
+  const m = cols[2];
+
         // Skip header
         if (w.toLowerCase() === "word" && a.toLowerCase().includes("antonym") && m.toLowerCase().includes("meaning")) {
           continue;
@@ -551,14 +579,6 @@ document.getElementById("quizBtn").addEventListener("click", () => {
       // Autofill filename
       const nameWithoutExt = file.name.replace(/\.csv$/i, "");
       document.getElementById("csvFileName").value = nameWithoutExt;
-
-      // Show import status
-      const statusEl = document.getElementById("importStatus");
-      statusEl.textContent = `Imported: ${file.name} ✅`;
-      statusEl.style.color = "#22c55e";
-
-      // Auto fade after few seconds
-      setTimeout(() => { statusEl.textContent = ""; }, 4000);
     }
   };
 
