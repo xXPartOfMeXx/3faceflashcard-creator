@@ -610,7 +610,7 @@ function csvEscape(value) {
   return str;
 }
 
-let csv = "Word,Antonym,Meaning\n";
+let csv = "";
 flashcards.forEach(c => {
   const w = csvEscape(c.word);
   const a = csvEscape(c.antonym);
