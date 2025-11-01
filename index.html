@@ -6,6 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3-Face Flashcards .csv Creator</title>
   <style>
+  .card-item {
+  padding: 10px;
+  background: #334155;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  cursor: pointer; /* 👈 shows the hand cursor */
+}
+
+.card-item:hover {
+  background: #475569; /* 👈 darkens when hovered */
+}
+
   a {
   color: #38bdf8;         /* light cyan-blue */
   text-decoration: none;  /* removes underline */
@@ -257,10 +269,8 @@ Some notes you need to know before use: <br><br>
 	- Importing a .csv file will ADD UP to the set card. If you want to import a new set of cards, <strong>Clear all</strong> before importing or it will add up to current set instead<br><br>
 	- <strong>Save Button</strong> is for when you want to save current card. If you want to add cards, use <strong>Add Card Button</strong> instead<br><br>
 	- <strong>NEVER</strong> use <strong>Save</strong> after <strong>Clear Fields</strong> (This makes it replace the current card)<br><br>
-	- Cards in card list is clickable, but it will not change your mouse cursor (i'm lazy to fix this lol)<br><br>
 	- !! <strong>Add New Card</strong> does NOT automatically add a blank card to save. Instead, <strong>Clear Fields</strong> and enter the content, then <strong>Add New Card</strong><br><br>
 	- <strong>NOW YOU CAN</strong> use <strong>","</strong> in your flashcards - it will <em>NOT</em> be buggy and I <strong>FIXED THAT!!!</strong><br><br>
-	- Use the preview card screen only when you want to revise. Just don't question it when it doesn't update as you type your card out... (I cannot hide it lol)
 	- Contact me on Facebook: <a href="https://www.facebook.com/panana.astley" target="_blank">Panana Astley</a><br><br>
 	<div class="tipleftheading">
 	  *Key bindings:
@@ -611,7 +621,7 @@ function csvEscape(value) {
   return str;
 }
 
-let csv = "";
+let csv = "Word,Antonym,Meaning\n";
 flashcards.forEach(c => {
   const w = csvEscape(c.word);
   const a = csvEscape(c.antonym);
