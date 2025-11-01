@@ -20,7 +20,7 @@ Some notes you need to know before use: <br><br>
 	  <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Space:</strong> Flip</p>
 	  <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Enter:</strong> Add new card</p>
 	  <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>S:</strong> Shuffle</p>
-	  <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Ctrl + S:</strong> Save current card (NOT ALWAYS WORK IDK WHY)</p> 
+	  <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Ctrl + S:</strong> Save current card **(NOT ALWAYS WORK IDK WHY)**</p> 
 	  <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Delete:</strong> Delete current card</p>
 	  <p>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Ctrl + Shift + Delete:</strong> Clear all 3 fields (will not delete the card)</p>
 	</div>
