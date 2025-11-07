@@ -17,6 +17,9 @@
 .card-item:hover {
   background: #475569; /* 👈 darkens when hovered */
 }
+.card-item.active {
+  background: #64748b; /* darker = selected card */
+}
 
   a {
   color: #38bdf8;         /* light cyan-blue */
@@ -208,6 +211,13 @@ a:hover {
     .editor input {
       flex: 1;
     }
+	button:disabled {
+  background: #475569;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
   </style>
 </head>
 <body>
@@ -235,7 +245,7 @@ a:hover {
     </div>
 
     <div class="main">
-      <div class="flashcard" id="flashcard">No cards yet</div>
+      <div class="flashcard" id="flashcard">Select or create a card to display</div>
       <div>
         <button onclick="prevCard()">◀ Previous card</button>
         <button onclick="flipCard()">Flip</button>
@@ -249,7 +259,7 @@ a:hover {
       </div>
       <div>
         <button onclick="addNewCard()">Add New Card</button>
-        <button onclick="saveCard()">Save</button>
+        <button id="saveBtn" onclick="saveCard()">Save</button>
         <button onclick="deleteCurrentCard()">Delete card</button>
 		<button id="clearFieldsBtn" class="ghost">Clear Fields</button>
       </div>
@@ -270,9 +280,7 @@ Some notes you need to know before use: <br><br>
 	- <strong>Save Button</strong> is for when you want to save current card. If you want to add cards, use <strong>Add Card Button</strong> instead<br><br>
 	- <strong>NEVER</strong> use <strong>Save</strong> after <strong>Clear Fields</strong> (This makes it replace the current card)<br><br>
 	- !! <strong>Add New Card</strong> does NOT automatically add a blank card to save. Instead, <strong>Clear Fields</strong> and enter the content, then <strong>Add New Card</strong><br><br>
-	- <strong>NOW YOU CAN</strong> use <strong>","</strong> in your flashcards - it will <em>NOT</em> be buggy and I <strong>FIXED THAT!!!</strong> <em>(I assume this thing nobody did lol)</em><br><br>
-	- This website currently does not support rearranging cards manually, but I might add it in the future<br><br> 
-	- #FFC100
+	- <strong>NOW YOU CAN</strong> use <strong>","</strong> in your flashcards - it will <em>NOT</em> be buggy and I <strong>FIXED THAT!!!</strong><br><br>
 	- Contact me on Facebook: <a href="https://www.facebook.com/panana.astley" target="_blank">Panana Astley</a><br><br>
 	<div class="tipleftheading">
 	  *Key bindings:
@@ -389,26 +397,46 @@ document.getElementById("quizBtn").addEventListener("click", () => {
 	});
 
     let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
-    let currentCard = 0;
+    let currentCard = -1;
     let currentFace = 0;
+function updateSaveButtonState() {
+  const saveBtn = document.getElementById("saveBtn");
+  if (!saveBtn) return;
+  saveBtn.disabled = currentCard < 0 || currentCard >= flashcards.length;
+}
 
     const flashcardEl = document.getElementById("flashcard");
     const cardListEl = document.getElementById("cardList");
 
     function updateCard() {
-      if (flashcards.length === 0) {
-        flashcardEl.textContent = "No cards yet";
-        return;
-      }
-      const card = flashcards[currentCard];
-      if (currentFace === 0) flashcardEl.textContent = card.word;
-      if (currentFace === 1) flashcardEl.textContent = card.antonym;
-      if (currentFace === 2) flashcardEl.textContent = card.meaning;
-      document.getElementById("word").value = card.word;
-      document.getElementById("antonym").value = card.antonym;
-      document.getElementById("meaning").value = card.meaning;
-      renderList();
-    }
+  // ensure currentCard is within bounds, else treat as no selection
+  if (flashcards.length === 0 || currentCard < 0 || currentCard >= flashcards.length) {
+    // no valid card selected
+    flashcardEl.textContent = "Select or create a card to display";
+    document.getElementById("word").value = "";
+    document.getElementById("antonym").value = "";
+    document.getElementById("meaning").value = "";
+    currentFace = 0;
+    renderList();
+    updateSaveButtonState();
+    return;
+  }
+
+  // valid selection
+  const card = flashcards[currentCard];
+  if (currentFace === 0) flashcardEl.textContent = card.word;
+  else if (currentFace === 1) flashcardEl.textContent = card.antonym;
+  else flashcardEl.textContent = card.meaning;
+
+  document.getElementById("word").value = card.word;
+  document.getElementById("antonym").value = card.antonym;
+  document.getElementById("meaning").value = card.meaning;
+
+  renderList();
+  updateSaveButtonState();
+}
+
+
 
     function flipCard() {
       if (flashcards.length === 0) return;
@@ -423,30 +451,43 @@ document.getElementById("quizBtn").addEventListener("click", () => {
     }
 
 	function prevCard() {
-	  if (flashcards.length === 0) return;
-	  currentCard = (currentCard - 1 + flashcards.length) % flashcards.length;
-	  currentFace = 0; // reset to Word when switching cards
-	  updateCard();
-	}
+  if (flashcards.length === 0) return;
+  currentCard = (currentCard <= 0) ? flashcards.length - 1 : currentCard - 1;
+  currentFace = 0;
+  updateCard();
+}
 
+function nextCard() {
+  if (flashcards.length === 0) return;
+  currentCard = (currentCard + 1) % flashcards.length;
+  currentFace = 0;
+  updateCard();
+}
 
-    function nextCard() {
-      if (flashcards.length === 0) return;
-      currentCard = (currentCard + 1) % flashcards.length;
-      currentFace = 0;
-      updateCard();
-    }
 
     function saveCard() {
-      if (flashcards.length === 0) return;
-      flashcards[currentCard] = {
-        word: document.getElementById("word").value,
-        antonym: document.getElementById("antonym").value,
-        meaning: document.getElementById("meaning").value
-      };
-      saveFlashcards();
-      updateCard();
-    }
+  // only allow saving when a valid card is selected
+  if (currentCard < 0 || currentCard >= flashcards.length) return;
+
+  flashcards[currentCard] = {
+    word: document.getElementById("word").value,
+    antonym: document.getElementById("antonym").value,
+    meaning: document.getElementById("meaning").value
+  };
+
+  saveFlashcards();
+
+  // clear fields and deselect
+  document.getElementById("word").value = "";
+  document.getElementById("antonym").value = "";
+  document.getElementById("meaning").value = "";
+
+  currentCard = -1;
+  currentFace = 0;
+  updateCard(); // authoritative UI sync (renders list, updates button)
+}
+
+
 
     function addNewCard() {
   const wordInput = document.getElementById("word");
@@ -457,22 +498,26 @@ document.getElementById("quizBtn").addEventListener("click", () => {
   const antonym = antonymInput.value.trim();
   let meaning = meaningInput.value.trim();
 
-  // ✅ if meaning is empty, replace with "-"
   if (!meaning) meaning = "-";
 
   flashcards.push({ word, antonym, meaning });
-  localStorage.setItem("flashcards", JSON.stringify(flashcards));
+  saveFlashcards();
 
-  currentCard = flashcards.length - 1;
-  currentFace = 0;
-  updateCard();
-
-  // ✅ clear inputs and refocus for quick entry
+  // clear inputs and deselect
   wordInput.value = "";
   antonymInput.value = "";
   meaningInput.value = "";
-  wordInput.focus();
+  currentCard = -1;
+  currentFace = 0;
+  updateCard();
+
+  // scroll to bottom to show the newly added card in list
+  setTimeout(() => {
+    cardListEl.scrollTop = cardListEl.scrollHeight;
+  }, 100);
 }
+
+
 
 
     function deleteCurrentCard() {
@@ -502,19 +547,19 @@ document.getElementById("quizBtn").addEventListener("click", () => {
       updateCard();
     }
 
-    function renderList() {
+function renderList() {
   cardListEl.innerHTML = "";
   flashcards.forEach((c, i) => {
     const div = document.createElement("div");
     div.className = "card-item";
-    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
-    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
-    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
-    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
-    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
-    div.innerHTML = `<strong>${c.word || "[Word]"}</strong>${c.antonym || "[Antonym]"}<br><em>${c.meaning || "[Meaning]"}</em>`;
-    
-    // ✅ use addEventListener instead of div.onclick
+    if (i === currentCard) div.classList.add("active");
+
+    div.innerHTML = `
+      <strong>${c.word || "[Word]"}</strong>
+      ${c.antonym || "[Antonym]"}<br>
+      <em>${c.meaning || "[Meaning]"}</em>
+    `;
+
     div.addEventListener("click", () => {
       currentCard = i;
       currentFace = 0;
@@ -522,8 +567,14 @@ document.getElementById("quizBtn").addEventListener("click", () => {
     });
 
     cardListEl.appendChild(div);
+
+    if (i === currentCard) {
+      // ensure we scroll the active item into view after append
+      setTimeout(() => div.scrollIntoView({ behavior: "smooth", block: "nearest" }), 0);
+    }
   });
 }
+
 	  
     function saveFlashcards() {
       localStorage.setItem("flashcards", JSON.stringify(flashcards));
@@ -640,9 +691,17 @@ flashcards.forEach(c => {
   link.click();
 }
 
-
-    updateCard();
-	  
+// properly initialize selection on load
+if (flashcards.length > 0) {
+  // choose last stored position if you want, here we pick first
+  currentCard = 0;
+  currentFace = 0;
+} else {
+  currentCard = -1;
+  currentFace = 0;
+}
+updateCard();
+  
 	document.addEventListener("keydown", function (e) {
 	  if (e.key === "Enter") {
 	    e.preventDefault(); // prevent form submit/reload
