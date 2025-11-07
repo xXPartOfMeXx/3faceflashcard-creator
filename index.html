@@ -691,15 +691,9 @@ flashcards.forEach(c => {
   link.click();
 }
 
-// properly initialize selection on load
-if (flashcards.length > 0) {
-  // choose last stored position if you want, here we pick first
-  currentCard = 0;
-  currentFace = 0;
-} else {
-  currentCard = -1;
-  currentFace = 0;
-}
+// ✅ Start with no card selected (even if cards exist)
+currentCard = -1;
+currentFace = 0;
 updateCard();
   
 	document.addEventListener("keydown", function (e) {
