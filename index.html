@@ -235,11 +235,15 @@ a:hover {
   </div>
   <div class="container">
     <div class="sidebar">
-      <input type="file" id="csvFile" accept=".csv"><br><br>
+<label for="csvFile"
+           style="display:inline-block; background-color:#007bff; color:white; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:1rem; margin-top:5px;">
+      Upload .csv 📂
+    </label>
+    <input type="file" id="csvFile" accept=".csv" style="display:none;"><br><br>
       <div class="card-list" id="cardList"></div>
       <button onclick="clearAll()">Clear all</button>
       <button onclick="shuffleCards()">Shuffle</button>
-	  <input type="text" id="csvFileName" placeholder="Enter file name..." style="width: 180px; padding: 6px; border-radius: 6px; border: none; background: #334155; color: white;">
+	  <input type="text" id="csvFileName" placeholder="Enter file name..." style="width: 150px; padding: 6px; border-radius: 6px; border: none; background: #334155; color: white;">
 <button id="exportCsvBtn">Export CSV</button>
 <div id="importStatus" style="margin-top: 5px; font-size: 0.9rem; color: #22c55e;"></div>
     </div>
@@ -555,11 +559,8 @@ function renderList() {
     if (i === currentCard) div.classList.add("active");
 
     div.innerHTML = `
-      <strong>${c.word || "[Word]"}</strong>
-      ${c.antonym || "[Antonym]"}<br>
-      <em>${c.meaning || "[Meaning]"}</em>
-    `;
-
+      <strong>${c.word || "[Word]"}</strong>      ${c.antonym || "[Antonym]"}<br>      <em>${c.meaning || "[Meaning]"}</em>`;
+	  
     div.addEventListener("click", () => {
       currentCard = i;
       currentFace = 0;
@@ -570,7 +571,7 @@ function renderList() {
 
     if (i === currentCard) {
       // ensure we scroll the active item into view after append
-      setTimeout(() => div.scrollIntoView({ behavior: "smooth", block: "nearest" }), 0);
+      setTimeout(() => div.scrollIntoView({  block: "nearest" }), 0);
     }
   });
 }
@@ -704,7 +705,7 @@ updateCard();
 	});
   </script>
   <div class="lol">
-	 <br>I forking love ChatGPT
+	 <br>ChatGPT op vai
   </div>
 	
 </body>
