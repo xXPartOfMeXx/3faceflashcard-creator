@@ -272,7 +272,7 @@ a:hover {
         <button onclick="addNewCard()">Add New Card</button>
         <button id="saveBtn" onclick="saveCard()">Save</button>
         <button onclick="deleteCurrentCard()">Delete card</button>
-		<button id="clearFieldsBtn" class="ghost">Clear Fields</button>
+		<button id="clearFieldsBtn" class="ghost">Deselect & Clear Fields</button>
       </div>
       <div id="status"></div>
     </div>
@@ -302,9 +302,9 @@ Some notes you need to know before use: <br><br>
 	  <p><strong>Space:</strong> Flip</p>
 	  <p><strong>Enter:</strong> Add new card</p>
 	  <p><strong>S:</strong> Shuffle</p>
-	  <p><strong>Ctrl + S:</strong> Save current card</p>
 	  <p><strong>Delete:</strong> Delete current card</p>
-	  <p><strong>Ctrl + Shift + Delete:</strong> Clear all 3 fields (will not delete the card)</p>
+	  <p><strong>Alt + S:</strong> Save current card</p>
+	  <p><strong>Alt + D:</strong> Clear all 3 fields (will not delete the card)</p>
 	</div>
     </p>
     <button id="closeReadmeBtn">Close</button>
@@ -329,7 +329,7 @@ readmePopup.addEventListener("click", (e) => {
 });
 // --- Keyboard shortcut: Ctrl + S to save current card ---
 document.addEventListener("keydown", function(e) {
-  if (e.ctrlKey && e.key.toLowerCase() === "s") {
+  if (e.altKey && e.key.toLowerCase() === "s") {
     e.preventDefault(); // prevent browser's default save
     saveCard(); // silently save current card
   }
@@ -341,17 +341,26 @@ document.addEventListener("keydown", function(e) {
   const antonymInput = document.getElementById("antonym");
   const meaningInput = document.getElementById("meaning");
 
+  // ✅ clear all inputs
   wordInput.value = "";
   antonymInput.value = "";
   meaningInput.value = "";
 
-  wordInput.focus(); // move cursor back to first field
+  // ✅ deselect any selected card
+  currentCard = -1;
+  currentFace = 0;
+
+  // ✅ re-render to update highlight + disable Save button
+  updateCard();
+
+  // ✅ focus first field for convenience
+  wordInput.focus();
 }
+
   document.getElementById("clearFieldsBtn").addEventListener("click", clearTypingFields);
   document.addEventListener("keydown", (e) => {
-  // Check for Ctrl + Shift + Delete (works even inside inputs)
-  if (e.ctrlKey && e.shiftKey && e.code === "Delete") {
-    e.preventDefault();  // stop browser default behavior
+  if (e.altKey && (e.key.toLowerCase() === "d")) {
+    e.preventDefault();
     clearTypingFields();
   }
 });
