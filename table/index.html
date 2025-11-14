@@ -366,23 +366,31 @@ function parseCSVLine(line) {
 
   for (let i = 0; i < line.length; i++) {
     const char = line[i];
+
     if (char === '"') {
-      if (inQuotes && line[i+1] === '"') {
-        current += '"';
-        i++;
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';     // escaped quote ("")
+        i++;                // skip second quote
       } else {
-        inQuotes = !inQuotes;
+        inQuotes = !inQuotes;  // toggle quote mode
       }
     } else if (char === "," && !inQuotes) {
-      result.push(current.trim());
+      result.push(current);
       current = "";
     } else {
       current += char;
     }
   }
-  result.push(current.trim());
+
+  // push last field EVEN if empty
+  result.push(current);
+
+  // OPTIONAL: always ensure 3 columns
+  while (result.length < 3) result.push("");
+
   return result;
 }
+
 
 function csvEscape(value) {
   if (!value) return "";
@@ -554,8 +562,14 @@ document.getElementById("exportBtn").onclick = () => {
   if (!filename.endsWith(".csv")) filename += ".csv";
 
   let csv = flashcards
-    .map(c => `${csvEscape(c.word)},${csvEscape(c.antonym)},${csvEscape(c.meaning)}`)
-    .join("\n");
+  .map(c => {
+    const face1 = csvEscape(c.word);
+    const face2 = csvEscape(c.antonym);
+    const face3 = c.meaning?.trim() ? csvEscape(c.meaning) : "-";
+    return `${face1},${face2},${face3}`;
+  })
+  .join("\n");
+
 
   const blob = new Blob([csv], { type: "text/csv" });
   const link = document.createElement("a");
@@ -731,4 +745,3 @@ window.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
-
