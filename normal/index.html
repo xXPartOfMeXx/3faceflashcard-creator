@@ -207,6 +207,21 @@ background-color: #4c4704;
   box-shadow: 0 0 12px rgba(241,228,50,0.6);
   transform: scale(1.05);
 }
+/* Purple button */
+button.purple-btn {
+  background-color: #1a2333;
+  color: #7a37ff;              /* brighter purple text */
+  border: 1px solid #7a37ff;   /* brighter border */
+  box-shadow: 0 0 8px rgba(122, 55, 255, 0.4);
+}
+
+button.purple-btn:hover {
+  background-color: #120d25;
+  color: #a974ff;              /* brighter on hover */
+  border: 1px solid #a974ff;
+  box-shadow: 0 0 12px rgba(122, 55, 255, 0.7);
+}
+
 
 
 /* 🔴 Red button (README) */
@@ -282,6 +297,9 @@ textarea:focus {
   <button style = "margin-left: -15px" id="githubBtn" class="yellow-btn">My GitHub (this website)</button> 
   <button id="quizBtn" class="yellow-btn">Quiz using these flashcards</button>
   <button id="readmeBtn" class="red-btn">README (IMPORTANT❗)</button>
+  <button class = "purple-btn" onclick="window.location.href='https://xxpartofmexx.github.io/3faceflashcard-creator/table/">
+    🔁 Table Mode
+  </button>
 </div>  
   <h1>3-Face Flashcards .csv Creator - Individual mode</h1>
   <h2 class="subtitle1">Create your own .csv 3-face flashcards</h2> 
