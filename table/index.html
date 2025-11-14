@@ -400,7 +400,7 @@ function renderListView() {
     const div = document.createElement("div");
     div.className = "card-item";
     div.innerHTML = `
-      <strong>${c.word}</strong> — ${c.antonym}<br>
+      <strong>${c.word}</strong><br>${c.antonym}<br>
       <em>${c.meaning}</em>
     `;
     cardList.appendChild(div);
@@ -731,3 +731,4 @@ window.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
