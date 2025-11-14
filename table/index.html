@@ -167,6 +167,21 @@ button.red-btn:hover {
   box-shadow: 0 0 12px rgba(239,68,68,0.6);
 }
 
+/* Purple button */
+button.purple-btn {
+  background-color: #1a2333;
+  color: #7a37ff;              /* brighter purple text */
+  border: 1px solid #7a37ff;   /* brighter border */
+  box-shadow: 0 0 8px rgba(122, 55, 255, 0.4);
+}
+
+button.purple-btn:hover {
+  background-color: #120d25;
+  color: #a974ff;              /* brighter on hover */
+  border: 1px solid #a974ff;
+  box-shadow: 0 0 12px rgba(122, 55, 255, 0.7);
+}
+
 /* Scrollable README content */
 #readmeText {
   max-height: 80vh;
@@ -260,6 +275,9 @@ button.red-btn:hover {
   <button style="margin-left:-15px" id="githubBtn" class="yellow-btn">My GitHub (this website)</button>
   <button id="quizBtn" class="yellow-btn">Quiz using these flashcards</button>
   <button id="readmeBtn" class="red-btn">README (IMPORTANT❗)</button>
+    <button class = "purple-btn" onclick="window.location.href='https://xxpartofmexx.github.io/3faceflashcard-creator/normal/">
+    🔁 Individual Mode
+  </button>
 </div>
 
 <!-- README POPUP -->
@@ -309,8 +327,8 @@ Some notes you need to know before use: <br><br>
     <input type="file" id="importFile" accept=".csv" style="display:none;">
 
     <button id="addRowBtn">Add Row</button>
-    <button id="deleteRowBtn" class="red-btn">Delete Selected Row</button>
-    <button id="clearAllBtn" class="red-btn">Clear All</button>
+    <button id="deleteRowBtn">Delete Selected Row</button>
+    <button id="clearAllBtn">Clear All</button>
     <button id="exportBtn">Export CSV 📤</button>
     <input type="text" id="fileName" placeholder="File name..." style="width:200px">
 
