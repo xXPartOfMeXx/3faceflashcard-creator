@@ -9,7 +9,6 @@ Some notes you need to know before use: <br><br>
 	- !! <strong>Add New Card</strong> does NOT automatically add a blank card to save. Instead, <strong>Clear Fields</strong> and enter the content, then <strong>Add New Card</strong><br><br>
 	- <strong>NOW YOU CAN</strong> use <strong>","</strong> in your flashcards - it will <em>NOT</em> be buggy and I <strong>FIXED THAT!!! 🎉🔥</strong> <em>(I assume this thing nobody did lol)</em><br><br>
 	<em>- This website currently does NOT support rearranging cards manually, but I might add it in the future</em><br><br> 
-	- #FFC100 (Self note lel)<br><br>
 	- Contact me on Facebook: <a href="https://www.facebook.com/panana.astley" target="_blank">Panana Astley</a><br><br>
 	<div>
 	  *Key bindings:<br><br>
