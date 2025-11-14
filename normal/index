@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="icon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3-Face Flashcards .csv Creator - Individual mode</title>
+  <style>
+  .card-item {
+  padding: 10px;
+  background: #334155;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  cursor: pointer; /* 👈 shows the hand cursor */
+}
+
+.card-item:hover {
+  background: #475569; /* 👈 darkens when hovered */
+}
+.card-item.active {
+  background: #64748b; /* darker = selected card */
+}
+
+  a {
+  color: #38bdf8;         /* light cyan-blue */
+  text-decoration: none;  /* removes underline */
+}
+
+a:hover {
+  color: #0ea5e9;         /* darker blue when hovered */
+  text-decoration: underline;
+}
+
+  /* popup background */
+.popup-overlay {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+/* popup box */
+.popup-box {
+  background: #1e293b;
+  color: #f8fafc;
+  padding: 20px;
+  border-radius: 10px;
+  width: 900px;
+  max-width: 90%;
+  max-height: 80vh;   /* 👈 limits popup height */
+  overflow-y: auto;   /* 👈 enables vertical scroll */
+  text-align: left;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  font-size: 1.2rem;   /* increase text size */
+  line-height: 1.3;    /* make it more readable */
+}
+
+.popup-box h2 {
+  margin-top: 0;
+}
+
+.popup-box button {
+  margin-top: 10px;
+  background: #0284c7;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.popup-box button:hover {
+  background: #0369a1;
+}
+
+	.lol {
+	  font-size: 0.7rem;
+	  color: #94a3b8; 
+	}
+	.tip {
+	  margin-top: -10px;
+	  font-size: 1rem;
+	  color: red; 
+	}
+	.tipleftheading {
+	  font-style: italic;
+	  font-size: 1rem;
+	  color: #FEB21A;
+	  text-align: left;
+	  width: 100%;
+	  max-width: 1200px;
+	  box-sizing: border-box;
+	}
+		.tipleft {
+	  margin-top: 20px;
+	  font-size: 1rem;
+	  color: #FEB21A;
+	  text-align: left;
+	  width: 100%;
+	  max-width: 1200px;
+	  box-sizing: border-box;
+	}
+		.buttonsontheleft {
+	  font-size: 1rem;
+	  text-align: left;
+	  width: 100%;
+	  max-width: 1200px;
+	  box-sizing: border-box;
+	  padding-left: 20px;
+	}
+	
+	.subtitle1 {
+	font-size: 1rem;
+	margin-bottom: 15px;
+}
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+    }
+    .container {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .sidebar, .main {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 20px;
+      flex: 1;
+    }
+    .sidebar {
+      max-width: 350px;
+    }
+    .card-list {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 10px;
+	  max-height: 300px;   /* limit area */
+	  overflow-y: auto;    /* scroll if too tall */
+	  padding-right: 5px;  /* spacing so scrollbar isn’t over text */
+	}
+    .card-item strong {
+      display: block;
+    }
+    .flashcard {
+      width: 100%;
+      height: 200px;
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+    /* ✨ New modern button style (matches Table Editor theme) */
+button {
+  background-color: #1a2333; /* darker for contrast */
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  margin: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(56,189,248,0.3);
+}
+
+button:hover {
+  background-color: #0f172a;
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(56,189,248,0.6);
+}
+
+
+/* 🟢 Yellow buttons (GitHub & Quiz) */
+button.yellow-btn {
+  background-color: #1a2333;
+  color: #f1e432;
+  border: 1px solid #f1e432;
+  box-shadow: 0 0 8px rgba(241,228,50,0.4);
+}
+
+button.yellow-btn:hover {
+background-color: #4c4704;
+  box-shadow: 0 0 12px rgba(241,228,50,0.6);
+  transform: scale(1.05);
+}
+
+
+/* 🔴 Red button (README) */
+button.red-btn {
+  background-color: #2b1212;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  box-shadow: 0 0 8px rgba(239,68,68,0.3);
+}
+
+button.red-btn:hover {
+  background-color: #5f1616;
+  color: #f87171;
+  box-shadow: 0 0 12px rgba(239,68,68,0.6);
+}
+
+button:disabled {
+  background-color: #1a2333;
+  color: #9ca3af; /* muted gray text */
+  border: 1px solid #475569; /* soft gray border */
+  box-shadow: 0 0 8px rgba(148,163,184,0.3); /* subtle gray glow */
+  cursor: not-allowed;
+  opacity: 1; /* keep same opacity for consistency */
+}
+
+    input {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #475569;
+      background: #1e293b;
+      color: white;
+    }
+    .editor {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .editor input {
+      flex: 1;
+    }
+
+
+/* 🔹 Style for all text inputs and textareas (Face 1–3, file name, etc.) */
+input[type="text"],
+textarea {
+  width: 100%;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+  color: #94a3b8;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #38bdf8;
+  background-color: #1e293b;
+}
+
+  </style>
+</head>
+<body>
+<div class="buttonsontheleft">
+  <button style = "margin-left: -15px" id="githubBtn" class="yellow-btn">My GitHub (this website)</button> 
+  <button id="quizBtn" class="yellow-btn">Quiz using these flashcards</button>
+  <button id="readmeBtn" class="red-btn">README (IMPORTANT❗)</button>
+</div>  
+  <h1>3-Face Flashcards .csv Creator - Individual mode</h1>
+  <h2 class="subtitle1">Create your own .csv 3-face flashcards</h2> 
+  <h4 class="tip" >❗ Tips and notes are in README (the button above) ❗</h4>
+  <div style = "margin-left: -15px" class="tipleft">
+	<button id="toggleListBtn">Hide List</button>
+  </div>
+  <div class="container">
+    <div class="sidebar">
+<label for="csvFile"
+           style="  background-color: #1a2333; /* darker for contrast */
+  color: #38bdf8;
+  border: 1px solid #38bdf8;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  margin: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(56,189,248,0.3);">
+      Import CSV 📥
+    </label>
+    <input type="file" id="csvFile" accept=".csv" style="display:none;"><br><br>
+      <div class="card-list" id="cardList"></div>
+      <button onclick="clearAll()">Clear all</button>
+	  <input type="text" id="csvFileName" placeholder="Enter file name..." style="width: 150px">
+<button id="exportCsvBtn">Export CSV 📤</button>
+<div id="importStatus" style="margin-top: 5px; font-size: 0.9rem; color: #22c55e;"></div>
+    </div>
+
+    <div class="main">
+      <div class="flashcard" id="flashcard">Select or create a card to display</div>
+      <div>
+        <button onclick="prevCard()">◀ Previous card</button>
+        <button onclick="flipCard()">Flip</button>
+        <button onclick="nextCard()">Next card ▶</button>
+      </div>
+
+      <div class="editor">
+        <input type="text" id="word" placeholder="Face 1">
+        <input type="text" id="antonym" placeholder="Face 2">
+        <input type="text" id="meaning" placeholder="Face 3">
+      </div>
+      <div>
+        <button onclick="addNewCard()">Add New Card</button>
+        <button id="saveBtn" onclick="saveCard()">Save</button>
+        <button onclick="deleteCurrentCard()">Delete card</button>
+		<button id="clearFieldsBtn" class="ghost">Deselect & Clear Fields</button>
+      </div>
+      <div id="status"></div>
+    </div>
+  </div>
+  <div id="readmePopup" class="popup-overlay">
+  <div class="popup-box">
+    <h2>README (please read...)</h2>
+	
+    <p id="readmeText">
+Create your 3-face-flashcards in ".csv" file
+
+Some notes you need to know before use: <br><br>
+	- This website only support editing <strong>ONE SET AT A TIME</strong>. So make sure you <strong>Export your csv file</strong> before editing your new set<br>
+	<em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*Tip: If you want to have several flashcard sets, export the set and move it to a dedicated folder (Make sure you remember where it is). When you want to edit, just import that set in and you're good to go 👍</em><br><br>
+	- Importing a .csv file will ADD UP to the set card. If you want to import a new set of cards, <strong>Clear all</strong> before importing or it will add up to current set instead<br><br>
+	- <strong>Save Button</strong> is for when you want to save current card. If you want to add cards, use <strong>Add Card Button</strong> instead<br><br>
+	- <strong>NEVER</strong> use <strong>Save</strong> after <strong>Clear Fields</strong> (This makes it replace the current card)<br><br>
+	- !! <strong>Add New Card</strong> does NOT automatically add a blank card to save. Instead, <strong>Clear Fields</strong> and enter the content, then <strong>Add New Card</strong><br><br>
+	- <strong>NOW YOU CAN</strong> use <strong>","</strong> in your flashcards - it will <em>NOT</em> be buggy and I <strong>FIXED THAT!!!</strong><br><br>
+	- Contact me on Facebook: <a href="https://www.facebook.com/panana.astley" target="_blank">Panana Astley</a><br><br>
+	<div class="tipleftheading">
+	  *Key bindings:
+	</div>
+	<div class="tipleft">
+	  <p><strong>◀ Left arrow:</strong> Previous card</p>
+	  <p><strong>▶ Right arrow:</strong> Next card</p>
+	  <p><strong>Space:</strong> Flip</p>
+	  <p><strong>Enter:</strong> Add new card</p>
+	  <p><strong>Delete:</strong> Delete current card</p>
+	  <p><strong>Alt + S:</strong> Save current card</p>
+	  <p><strong>Alt + D:</strong> Clear all 3 fields (will not delete the card)</p>
+	</div>
+    </p>
+    <button id="closeReadmeBtn">Close</button>
+  </div>
+</div>
+  <script>
+      let flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
+    let currentCard = -1;
+    let currentFace = 0;
+  
+  const readmePopup = document.getElementById("readmePopup");
+const readmeBtn = document.getElementById("readmeBtn");
+const closeReadmeBtn = document.getElementById("closeReadmeBtn");
+
+readmeBtn.addEventListener("click", () => {
+  readmePopup.style.display = "flex";
+});
+
+closeReadmeBtn.addEventListener("click", () => {
+  readmePopup.style.display = "none";
+});
+
+// optional: click outside popup to close
+readmePopup.addEventListener("click", (e) => {
+  if (e.target === readmePopup) readmePopup.style.display = "none";
+});
+// --- Keyboard shortcut: Ctrl + S to save current card ---
+document.addEventListener("keydown", function(e) {
+  if (e.altKey && e.key.toLowerCase() === "s") {
+    e.preventDefault(); // prevent browser's default save
+    saveCard(); // silently save current card
+  }
+});
+
+  
+  function clearTypingFields() {
+  const wordInput = document.getElementById("word");
+  const antonymInput = document.getElementById("antonym");
+  const meaningInput = document.getElementById("meaning");
+
+  // ✅ clear all inputs
+  wordInput.value = "";
+  antonymInput.value = "";
+  meaningInput.value = "";
+
+  // ✅ deselect any selected card
+  currentCard = -1;
+  currentFace = 0;
+
+  // ✅ re-render to update highlight + disable Save button
+  updateCard();
+
+  // ✅ focus first field for convenience
+  wordInput.focus();
+}
+
+  document.getElementById("clearFieldsBtn").addEventListener("click", clearTypingFields);
+  document.addEventListener("keydown", (e) => {
+  if (e.altKey && (e.key.toLowerCase() === "d")) {
+    e.preventDefault();
+    clearTypingFields();
+  }
+});
+
+
+	document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
+  document.getElementById("githubBtn").addEventListener("click", () => {
+  window.open("https://github.com/xXPartOfMeXx/3faceflashcard-creator", "_blank");
+});
+
+document.getElementById("quizBtn").addEventListener("click", () => {
+  window.open("https://xxpartofmexx.github.io/quiz-flashcard-3-sided-chatgpt", "_blank");
+});
+
+	  const toggleBtn = document.getElementById("toggleListBtn");
+	  const cardList = document.getElementById("cardList");
+
+	  toggleBtn.addEventListener("click", () => {
+	  if (cardList.style.display === "none") {
+		cardList.style.display = "flex"; // show it again
+		toggleBtn.textContent = "Hide List";
+	} else {
+		cardList.style.display = "none"; // hide it
+		toggleBtn.textContent = "Show List";
+	  }
+	});
+
+		// Keyboard controls
+	document.addEventListener("keydown", function(e) {
+	  // Ignore if typing in input or textarea
+	  if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") {
+	    return;
+	  }
+	  if (e.code === "Delete") {
+	    e.preventDefault();
+	    deleteCurrentCard();   // delete
+	  }
+	  if (e.code === "ArrowLeft") {
+	    e.preventDefault();
+	    prevCard();   // go to previous card
+	  }
+	  if (e.code === "ArrowRight") {
+	    e.preventDefault();
+	    nextCard();   // go to next card
+	  }
+	  if (e.code === "Space") {
+	    e.preventDefault();
+	    flipCard();   // flip faces
+	  }
+	});
+
+
+function updateSaveButtonState() {
+  const saveBtn = document.getElementById("saveBtn");
+  if (!saveBtn) return;
+  saveBtn.disabled = currentCard < 0 || currentCard >= flashcards.length;
+}
+
+    const flashcardEl = document.getElementById("flashcard");
+    const cardListEl = document.getElementById("cardList");
+
+    function updateCard() {
+  // ensure currentCard is within bounds, else treat as no selection
+  if (flashcards.length === 0 || currentCard < 0 || currentCard >= flashcards.length) {
+    // no valid card selected
+    flashcardEl.textContent = "Select or create a card to display";
+    document.getElementById("word").value = "";
+    document.getElementById("antonym").value = "";
+    document.getElementById("meaning").value = "";
+    currentFace = 0;
+    renderList();
+    updateSaveButtonState();
+    return;
+  }
+
+  // valid selection
+  const card = flashcards[currentCard];
+  if (currentFace === 0) flashcardEl.textContent = card.word;
+  else if (currentFace === 1) flashcardEl.textContent = card.antonym;
+  else flashcardEl.textContent = card.meaning;
+
+  document.getElementById("word").value = card.word;
+  document.getElementById("antonym").value = card.antonym;
+  document.getElementById("meaning").value = card.meaning;
+
+  renderList();
+  updateSaveButtonState();
+}
+
+
+
+    function flipCard() {
+      if (flashcards.length === 0) return;
+      currentFace = (currentFace + 1) % 3;
+      updateCard();
+    }
+
+    function prevFace() {
+      if (flashcards.length === 0) return;
+      currentFace = (currentFace + 2) % 3;
+      updateCard();
+    }
+
+	function prevCard() {
+  if (flashcards.length === 0) return;
+  currentCard = (currentCard <= 0) ? flashcards.length - 1 : currentCard - 1;
+  currentFace = 0;
+  updateCard();
+}
+
+function nextCard() {
+  if (flashcards.length === 0) return;
+  currentCard = (currentCard + 1) % flashcards.length;
+  currentFace = 0;
+  updateCard();
+}
+
+
+    function saveCard() {
+  // only allow saving when a valid card is selected
+  if (currentCard < 0 || currentCard >= flashcards.length) return;
+
+  flashcards[currentCard] = {
+    word: document.getElementById("word").value,
+    antonym: document.getElementById("antonym").value,
+    meaning: document.getElementById("meaning").value
+  };
+
+  saveFlashcards();
+
+  // clear fields and deselect
+  document.getElementById("word").value = "";
+  document.getElementById("antonym").value = "";
+  document.getElementById("meaning").value = "";
+
+  currentCard = -1;
+  currentFace = 0;
+  updateCard(); // authoritative UI sync (renders list, updates button)
+}
+
+
+
+    function addNewCard() {
+  const wordInput = document.getElementById("word");
+  const antonymInput = document.getElementById("antonym");
+  const meaningInput = document.getElementById("meaning");
+
+  const word = wordInput.value.trim();
+  const antonym = antonymInput.value.trim();
+  let meaning = meaningInput.value.trim();
+
+  if (!meaning) meaning = "-";
+
+  flashcards.push({ word, antonym, meaning });
+  saveFlashcards();
+
+  // clear inputs and deselect
+  wordInput.value = "";
+  antonymInput.value = "";
+  meaningInput.value = "";
+  currentCard = -1;
+  currentFace = 0;
+  updateCard();
+
+  // scroll to bottom to show the newly added card in list
+  setTimeout(() => {
+    cardListEl.scrollTop = cardListEl.scrollHeight;
+  }, 100);
+}
+
+
+
+
+    function deleteCurrentCard() {
+      if (flashcards.length === 0) return;
+      flashcards.splice(currentCard, 1);
+      if (currentCard >= flashcards.length) currentCard = flashcards.length - 1;
+      saveFlashcards();
+      updateCard();
+    }
+
+    function clearAll() {
+	  flashcards = [];
+	  saveFlashcards();
+	  updateCard();
+	  setTimeout(() => {
+		location.reload(); // ✅ reload the page after short delay
+	  }, 300);
+	}
+
+function renderList() {
+  cardListEl.innerHTML = "";
+  flashcards.forEach((c, i) => {
+    const div = document.createElement("div");
+    div.className = "card-item";
+    if (i === currentCard) div.classList.add("active");
+
+    div.innerHTML = `
+      <strong>${c.word || "[Word]"}</strong>      ${c.antonym || "[Antonym]"}<br>      <em>${c.meaning || "[Meaning]"}</em>`;
+	  
+    div.addEventListener("click", () => {
+      currentCard = i;
+      currentFace = 0;
+      updateCard();
+    });
+
+    cardListEl.appendChild(div);
+
+    if (i === currentCard) {
+      // ensure we scroll the active item into view after append
+      setTimeout(() => div.scrollIntoView({  block: "nearest" }), 0);
+    }
+  });
+}
+
+	  
+    function saveFlashcards() {
+      localStorage.setItem("flashcards", JSON.stringify(flashcards));
+    }
+
+    // CSV Import
+    document.getElementById("csvFile").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const text = event.target.result;
+    const lines = text.split(/\r?\n/);
+    let imported = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      // ✅ Proper CSV parser that respects quotes
+function parseCSVLine(line) {
+  const result = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (char === '"') {
+      // handle escaped quotes ("")
+      if (inQuotes && line[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === "," && !inQuotes) {
+      result.push(current.trim());
+      current = "";
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
+const cols = parseCSVLine(lines[i]);
+if (cols.length >= 3) {
+  const w = cols[0];
+  const a = cols[1];
+  const m = cols[2];
+
+        // Skip header
+        if (w.toLowerCase() === "word" && a.toLowerCase().includes("antonym") && m.toLowerCase().includes("meaning")) {
+          continue;
+        }
+        imported.push({ word: w, antonym: a, meaning: m });
+      }
+    }
+
+    if (imported.length > 0) {
+      flashcards = flashcards.concat(imported);
+      saveFlashcards();
+      currentCard = 0;
+      currentFace = 0;
+      updateCard();
+
+      // Autofill filename
+      const nameWithoutExt = file.name.replace(/\.csv$/i, "");
+      document.getElementById("csvFileName").value = nameWithoutExt;
+    }
+  };
+
+  reader.readAsText(file);
+});
+
+    // CSV Export
+
+    function exportCsv() {
+  if (flashcards.length === 0) {
+    alert("No flashcards to export!");
+    return;
+  }
+
+  // ✅ get the custom file name (or use default)
+  let fileName = document.getElementById("csvFileName").value.trim();
+  if (fileName === "") fileName = "flashcards";
+  if (!fileName.endsWith(".csv")) fileName += ".csv";
+
+  // build CSV content
+  // ✅ Proper CSV stringifier (handles commas and quotes)
+function csvEscape(value) {
+  if (value == null) return "";
+  const str = String(value);
+  // If contains a comma or quote, wrap in quotes and escape existing quotes
+  if (str.includes(",") || str.includes('"')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+let csv = "";
+flashcards.forEach(c => {
+  const w = csvEscape(c.word);
+  const a = csvEscape(c.antonym);
+  const m = csvEscape(c.meaning);
+  csv += `${w},${a},${m}\n`;
+});
+
+
+  // create downloadable link
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+}
+
+// ✅ Start with no card selected (even if cards exist)
+currentCard = -1;
+currentFace = 0;
+updateCard();
+  
+	document.addEventListener("keydown", function (e) {
+	  if (e.key === "Enter") {
+	    e.preventDefault(); // prevent form submit/reload
+	    addNewCard();
+	  }
+	});
+  </script>
+  <div class="lol">
+	 <br>ChatGPT op vai
+  </div>
+	
+</body>
+</html>
