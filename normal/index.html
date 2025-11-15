@@ -297,7 +297,7 @@ textarea:focus {
   <button style = "margin-left: -15px" id="githubBtn" class="yellow-btn">My GitHub (this website)</button> 
   <button id="quizBtn" class="yellow-btn">Quiz using these flashcards</button>
   <button id="readmeBtn" class="red-btn">README (IMPORTANT❗)</button>
-  <button class = "purple-btn" onclick="window.location.href='https://xxpartofmexx.github.io/3faceflashcard-creator/table/ '">
+  <button class = "purple-btn" onclick="window.location.href='https://xxpartofmexx.github.io/3faceflashcard-creator/table '">
     🔁 Table Mode
   </button>
 </div>  
@@ -621,6 +621,7 @@ function nextCard() {
     }
 
     function clearAll() {
+    if (!confirm("Clear all flashcards? This cannot be undone.")) return;
 	  flashcards = [];
 	  saveFlashcards();
 	  updateCard();
