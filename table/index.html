@@ -428,7 +428,15 @@ function buildRow(face1, face2, face3, index) {
 
   row.addEventListener("mousedown", (e) => {
   // If user clicked inside an input, DO NOT move cursor to face 1
-  if (e.target.tagName === "INPUT") return;
+  if (e.target.tagName === "INPUT") {
+    // Selecting row WHEN clicking input (but don't force cursor to face1)
+    if (selectedRow) selectedRow.classList.remove("selected");
+    row.classList.add("selected");
+    selectedRow = row;
+    currentCard = Number(row.dataset.index);
+    return; // do NOT reset face
+}
+
 
   // Otherwise select the entire row
   if (selectedRow) selectedRow.classList.remove("selected");
