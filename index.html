@@ -2,138 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEV BRAIN MELT 💀</title>
+<title>3-Face Flashcards .csv Creator</title>
+
 <style>
-    @keyframes shake {
-        0% { transform: translate(0px, 0px) rotate(0deg); }
-        10% { transform: translate(-5px, 5px) rotate(-5deg); }
-        20% { transform: translate(5px, -5px) rotate(5deg); }
-        30% { transform: translate(-5px, 5px) rotate(-5deg); }
-        40% { transform: translate(5px, -5px) rotate(5deg); }
-        50% { transform: translate(-5px, 5px) rotate(-5deg); }
-        60% { transform: translate(5px, -5px) rotate(5deg); }
-        70% { transform: translate(-5px, 5px) rotate(-5deg); }
-        80% { transform: translate(5px, -5px) rotate(5deg); }
-        90% { transform: translate(-5px, 5px) rotate(-5deg); }
-        100% { transform: translate(0px, 0px) rotate(0deg); }
-    }
+/* ======== GLOBAL STYLE (Matches your original) ======== */
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #f8fafc;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 
-    @keyframes rainbow {
-        0% { color: red; }
-        14% { color: orange; }
-        28% { color: yellow; }
-        42% { color: green; }
-        56% { color: blue; }
-        70% { color: indigo; }
-        84% { color: violet; }
-        100% { color: red; }
-    }
+h1 {
+  margin-top: 40px;
+  margin-bottom: 10px;
+  font-size: 2.2rem;
+}
 
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background: black;
-        font-family: "Comic Sans MS", cursive, sans-serif;
-        overflow: hidden;
-        position: relative;
-    }
+h2 {
+  font-size: 1.3rem;
+  color: #94a3b8;
+  margin-bottom: 30px;
+}
 
-    .container {
-        text-align: center;
-    }
+h3 {
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 30px;
+} 
 
-    h1 {
-        font-size: 3em;
-        animation: rainbow 1s infinite;
-        text-shadow: 0 0 10px white, 0 0 20px red, 0 0 30px yellow;
-        display: inline-block;
-    }
+/* ======== BUTTON STYLE (Exact match) ======== */
+button {
+  background-color: #1a2333;
+@@ -61,7 +67,7 @@
 
-    .glitch {
-        display: inline-block;
-        animation: shake 0.5s infinite;
-        position: relative;
-        color: white;
-        font-weight: bold;
-    }
+<h1>3-Face Flashcards .csv Creator</h1>
+<h2>Choose editor type</h2>
+<h3>You can change to other editors at any time</h3>
+<div class="container">
+  <button onclick="window.location.href='https://xxpartofmexx.github.io/3faceflashcard-creator/normal/'">
+    Individual Editor Mode
+@@ -70,6 +76,9 @@
+  <button onclick="window.location.href='https://xxpartofmexx.github.io/3faceflashcard-creator/table/'">
+    Table Editor Mode
+  </button>
+<h3><em>*Note that switching editors will NOT bring your file over. But it does auto save into your local browser storage (of that type of editor).</em><br>
+To do so, export from first editor before importing into the next one.
+</be></h3>
+</div>
 
-    .glitch::before, .glitch::after {
-        content: attr(data-text);
-        position: absolute;
-        left: 0;
-        text-shadow: -2px 0 red, 2px 0 blue;
-        clip: rect(0, 900px, 0, 0);
-    }
-
-    .glitch::before {
-        animation: glitchTop 1s infinite linear alternate-reverse;
-    }
-
-    .glitch::after {
-        animation: glitchBottom 1s infinite linear alternate-reverse;
-    }
-
-    @keyframes glitchTop {
-        0% { clip: rect(0, 9999px, 0, 0); transform: translate(-3px, -3px); }
-        25% { clip: rect(0, 9999px, 50px, 0); transform: translate(3px, 3px); }
-        50% { clip: rect(0, 9999px, 25px, 0); transform: translate(-3px, 0); }
-        75% { clip: rect(0, 9999px, 50px, 0); transform: translate(3px, -3px); }
-        100% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
-    }
-
-    @keyframes glitchBottom {
-        0% { clip: rect(0, 9999px, 0, 0); transform: translate(3px, 3px); }
-        25% { clip: rect(25px, 9999px, 75px, 0); transform: translate(-3px, -3px); }
-        50% { clip: rect(50px, 9999px, 100px, 0); transform: translate(0, 3px); }
-        75% { clip: rect(25px, 9999px, 50px, 0); transform: translate(-3px, 0); }
-        100% { clip: rect(0, 9999px, 0, 0); transform: translate(0, 0); }
-    }
-
-    p {
-        font-size: 1.5em;
-        animation: rainbow 0.8s infinite alternate;
-        line-height: 1.5;
-        text-shadow: 0 0 5px white;
-        margin-top: 20px;
-    }
-
-    .banana {
-        position: absolute;
-        font-size: 2em;
-        animation: floatBanana 1s infinite alternate;
-    }
-
-    @keyframes floatBanana {
-        0% { transform: translateY(0) rotate(0deg); }
-        50% { transform: translateY(-20px) rotate(15deg); }
-        100% { transform: translateY(0) rotate(-15deg); }
-    }
-</style>
-</head>
-<body>
-    <div class="container">
-        <h1 class="glitch" data-text="SHIET!">SHIET!</h1>
-        <p>This website has unfixable bugs and us devs are <span style="color:#ff00ff;">fucking</span> our last braincells to work on.<br>
-        Please come back later.</p>
-    </div>
-
-    <script>
-        function spawnBanana() {
-            const banana = document.createElement('div');
-            banana.classList.add('banana');
-            banana.textContent = '🍌';
-            banana.style.left = Math.random() * window.innerWidth + 'px';
-            banana.style.top = Math.random() * window.innerHeight + 'px';
-            banana.style.fontSize = (20 + Math.random() * 40) + 'px';
-            document.body.appendChild(banana);
-            setTimeout(() => banana.remove(), 3000);
-        }
-
-        setInterval(spawnBanana, 50); // spawn a banana every 0.3s
-    </script>
 </body>
-</html>
